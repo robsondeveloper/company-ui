@@ -1,32 +1,31 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <header>
+      <TopHeader></TopHeader>
+    </header>
+
+    <main>
+      <div class="container mt-3">
+        <router-view />
+      </div>
+    </main>
+
+    <footer class="fixed-bottom bg-secondary py-3">
+      <div class="container">
+        <span class="text-white">&copy; 2020 COMPANY</span>
+      </div>
+    </footer>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import TopHeader from '@/components/TopHeader'
 
-#nav {
-  padding: 30px;
+export default {
+  components: {
+    TopHeader
+  }
 }
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style></style>
