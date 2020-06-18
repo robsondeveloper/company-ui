@@ -9,6 +9,7 @@
         <b-navbar-nav>
           <b-nav-item to="/">Página Inicial</b-nav-item>
           <b-nav-item v-if="loggedIn" to="/department">Departamento</b-nav-item>
+          <b-nav-item v-if="loggedIn" to="/employee">Empregado</b-nav-item>
           <b-nav-item v-if="loggedIn" to="/about">Sobre</b-nav-item>
         </b-navbar-nav>
 
