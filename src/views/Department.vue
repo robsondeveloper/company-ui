@@ -17,7 +17,13 @@
       </b-form-group>
 
       <b-form-group label="Número" label-for="number">
-        <b-form-input id="number" v-model="form.number" required></b-form-input>
+        <b-form-input
+          id="number"
+          v-model.number="form.number"
+          type="number"
+          min="1"
+          required
+        ></b-form-input>
       </b-form-group>
 
       <b-button type="submit" variant="primary">Salvar</b-button>
@@ -57,13 +63,21 @@ export default {
     },
     save() {
       if (this.form.id) {
-        DepartmentService.update(this.form.id, this.form).then(response => {
-          this.init('Departamento atualizado.')
-        })
+        DepartmentService.update(this.form.id, this.form)
+          .then(response => {
+            this.init('Departamento atualizado.')
+          })
+          .catch(error => {
+            Swal.fire('', error.response.data.message, 'warning')
+          })
       } else {
-        DepartmentService.create(this.form).then(response => {
-          this.init('Departamento criado.')
-        })
+        DepartmentService.create(this.form)
+          .then(response => {
+            this.init('Departamento criado.')
+          })
+          .catch(error => {
+            Swal.fire('', error.response.data.message, 'warning')
+          })
       }
     },
     update(department) {
