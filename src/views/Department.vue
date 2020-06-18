@@ -5,9 +5,19 @@
         <b-button variant="info" class="mr-3" @click="update(row.item)"
           ><b-icon icon="pencil"></b-icon
         ></b-button>
-        <b-button variant="danger" @click="remove(row.item.id)"
+        <b-button variant="danger" class="mr-3" @click="remove(row.item.id)"
           ><b-icon icon="trash"></b-icon
         ></b-button>
+        <router-link
+          :to="{
+            name: 'DepartmentEmployee',
+            params: { id: row.item.id, name: row.item.name }
+          }"
+        >
+          <b-button variant="primary" v-b-tooltip.hover title="Empregados"
+            ><b-icon icon="people-fill"></b-icon
+          ></b-button>
+        </router-link>
       </template>
     </b-table>
 
@@ -57,27 +67,19 @@ export default {
   },
   methods: {
     getAll() {
-      DepartmentService.getAll().then(response => {
-        this.departments = response.data
-      })
+      DepartmentService.getAll().then(
+        response => (this.departments = response.data)
+      )
     },
     save() {
       if (this.form.id) {
         DepartmentService.update(this.form.id, this.form)
-          .then(response => {
-            this.init('Departamento atualizado.')
-          })
-          .catch(error => {
-            Swal.fire('', error.response.data.message, 'warning')
-          })
+          .then(response => this.init('Departamento atualizado.'))
+          .catch(error => Swal.fire('', error.response.data.message, 'error'))
       } else {
         DepartmentService.create(this.form)
-          .then(response => {
-            this.init('Departamento criado.')
-          })
-          .catch(error => {
-            Swal.fire('', error.response.data.message, 'warning')
-          })
+          .then(response => this.init('Departamento criado.'))
+          .catch(error => Swal.fire('', error.response.data.message, 'error'))
       }
     },
     update(department) {
@@ -95,9 +97,9 @@ export default {
         cancelButtonText: 'NÃO'
       }).then(result => {
         if (result.value) {
-          DepartmentService.delete(id).then(response => {
+          DepartmentService.delete(id).then(response =>
             this.init('Departamento deletado.')
-          })
+          )
         }
       })
     },

@@ -19,7 +19,7 @@ client.interceptors.response.use(
       // if we catch a 401 error
       this.$store.dispatch('logout') // force a log out
     }
-    /// Swal.fire('', error.response.data.message, 'warning')
+    /// Swal.fire('', error.response.data.message, 'error')
     return Promise.reject(error) // reject the Promise, with the error as the reason
   }
 )

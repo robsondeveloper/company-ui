@@ -14,5 +14,16 @@ export default {
   },
   delete(id) {
     return client.delete(`${resourceName}/${id}`)
+  },
+  getEmployees(id) {
+    return client.get(`${resourceName}/${id}/employees`)
+  },
+  addEmployee(departmentId, employeeId) {
+    return client.put(`${resourceName}/${departmentId}/employees/${employeeId}`)
+  },
+  removeEmployee(departmentId, employeeId) {
+    return client.delete(
+      `${resourceName}/${departmentId}/employees/${employeeId}`
+    )
   }
 }
