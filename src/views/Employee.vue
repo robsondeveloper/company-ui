@@ -23,7 +23,8 @@
       <b-form-group label="Salário" label-for="salary">
         <b-form-input
           id="salary"
-          v-model.number="form.salary"
+          v-model="form.salary"
+          v-mask="'###.###,##'"
           required
         ></b-form-input>
       </b-form-group>
@@ -36,8 +37,12 @@
 <script>
 import EmployeeService from '@/services/EmployeeService'
 import Swal from 'sweetalert2'
+import { mask } from 'vue-the-mask'
 
 export default {
+  directives: {
+    mask
+  },
   data() {
     return {
       show: true,
@@ -73,8 +78,8 @@ export default {
       let formData = {
         id: this.form.id,
         name: this.form.name,
-        birth: this.form.birth.toLocaleDateString('pt-BR'),
-        salary: this.form.salary
+        birth: this.form.birth.toLocaleDateString('pt-BR', {}),
+        salary: this.form.salary.replace(/\./g, '').replace(',', '.')
       }
       if (this.form.id) {
         EmployeeService.update(formData.id, formData)
@@ -87,7 +92,15 @@ export default {
       }
     },
     update(employee) {
-      this.form = JSON.parse(JSON.stringify(employee))
+      this.form.id = employee.id
+      this.form.name = employee.name
+      let employeeBirth = employee.birth.split('/')
+      this.form.birth = new Date(
+        employeeBirth[2],
+        employeeBirth[1] - 1,
+        employeeBirth[0]
+      )
+      this.form.salary = employee.salary.toString().replace('.', ',')
     },
     remove(id) {
       Swal.fire({

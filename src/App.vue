@@ -10,7 +10,7 @@
       </div>
     </main>
 
-    <footer class="bg-secondary py-3">
+    <footer class="mt-3 bg-secondary py-3">
       <div class="container">
         <span class="text-white">&copy; 2020 COMPANY</span>
       </div>
