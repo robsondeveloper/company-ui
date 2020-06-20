@@ -14,6 +14,7 @@
           <b-nav-item v-if="loggedIn" to="/employee">Empregados</b-nav-item>
           <b-nav-item v-if="loggedIn" to="/project">Projetos</b-nav-item>
           <b-nav-item v-if="loggedIn" to="/user">Usuários</b-nav-item>
+          <b-nav-item v-if="loggedIn" to="/product">Produtos</b-nav-item>
           <b-nav-item v-if="loggedIn" to="/about">Sobre</b-nav-item>
         </b-navbar-nav>
 
