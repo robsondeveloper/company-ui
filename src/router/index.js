@@ -35,6 +35,19 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/project',
+    name: 'Project',
+    component: () => import('@/views/Project'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/project/:id',
+    name: 'ProjectEmployee',
+    component: () => import('@/components/ProjectEmployee'),
+    meta: { requiresAuth: true },
+    props: true
+  },
+  {
     path: '/user',
     name: 'User',
     component: () => import('@/views/User'),
