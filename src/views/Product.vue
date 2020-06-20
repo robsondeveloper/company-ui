@@ -106,8 +106,13 @@ export default {
       ProductService.getAll().then(response => (this.products = response.data))
     },
     save() {
-      if (this.form.file != null) {
-        console.log(this.form.file.type)
+      if (this.form.file && !this.form.file.type.startsWith('image')) {
+        Swal.fire(
+          '',
+          'extensão de arquivo inválida, selecione uma imagem',
+          'error'
+        )
+        return
       }
       let formData = new FormData()
       formData.append('id', this.form.id)
@@ -116,11 +121,13 @@ export default {
         'price',
         this.form.price.replace(/\./g, '').replace(',', '.')
       )
-      formData.append('file', this.form.file)
+      if (this.form.file) {
+        formData.append('file', this.form.file)
+      }
       formData.append('active', this.form.active)
 
-      if (formData.get('id')) {
-        ProductService.update(formData.get('id'), formData)
+      if (this.form.id) {
+        ProductService.update(this.form.id, formData)
           .then(response => this.init('Produto atualizado.'))
           .catch(error => Swal.fire('', error.response.data.message, 'error'))
       } else {
