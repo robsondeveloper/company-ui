@@ -21,12 +21,12 @@
       </b-form-group>
 
       <b-form-group label="Salário" label-for="salary">
-        <b-form-input
-          id="salary"
+        <money
           v-model="form.salary"
-          v-mask="'###.###,##'"
-          required
-        ></b-form-input>
+          v-bind="money"
+          id="salary"
+          class="form-control"
+        ></money>
       </b-form-group>
 
       <b-button type="submit" variant="primary">Salvar</b-button>
@@ -37,11 +37,11 @@
 <script>
 import EmployeeService from '@/services/EmployeeService'
 import Swal from 'sweetalert2'
-import { mask } from 'vue-the-mask'
+import { Money } from 'v-money'
 
 export default {
-  directives: {
-    mask
+  components: {
+    Money
   },
   data() {
     return {
@@ -57,7 +57,14 @@ export default {
         id: null,
         name: '',
         birth: null,
-        salary: null
+        salary: ''
+      },
+      money: {
+        decimal: ',',
+        thousands: '.',
+        prefix: 'R$ ',
+        precision: 2,
+        masked: false
       }
     }
   },
@@ -75,15 +82,19 @@ export default {
         Swal.fire('', 'informe sua data de nascimento', 'error')
         return
       }
+      if (this.form.salary <= 0 || this.form.salary > 999999.99) {
+        Swal.fire('', 'Salário com valor inválido', 'error')
+        return
+      }
       let formData = {
         id: this.form.id,
         name: this.form.name,
         birth: this.form.birth.toLocaleDateString('pt-BR', {}),
-        salary: this.form.salary.replace(/\./g, '').replace(',', '.')
+        salary: this.form.salary
       }
       if (this.form.id) {
         EmployeeService.update(formData.id, formData)
-          .then(response => this.init('Empregadp atualizado.'))
+          .then(response => this.init('Empregado atualizado.'))
           .catch(error => Swal.fire('', error.response.data.message, 'error'))
       } else {
         EmployeeService.create(formData)
@@ -100,7 +111,7 @@ export default {
         employeeBirth[1] - 1,
         employeeBirth[0]
       )
-      this.form.salary = employee.salary.toString().replace('.', ',')
+      this.form.salary = employee.salary
     },
     remove(id) {
       Swal.fire({
@@ -124,7 +135,7 @@ export default {
       this.form.id = null
       this.form.name = ''
       this.form.birth = null
-      this.form.salary = null
+      this.form.salary = ''
       // Trick to reset/clear native browser form validation state
       this.show = false
       this.$nextTick(() => {

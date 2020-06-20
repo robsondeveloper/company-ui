@@ -14,12 +14,12 @@
         </b-form-group>
 
         <b-form-group label="Preço" label-for="price">
-          <b-form-input
-            id="price"
+          <money
             v-model="form.price"
-            v-mask="'###.###,##'"
-            required
-          ></b-form-input>
+            v-bind="money"
+            id="price"
+            class="form-control"
+          ></money>
         </b-form-group>
 
         <b-form-group label="Foto" label-for="file">
@@ -65,11 +65,11 @@
 <script>
 import ProductService from '@/services/ProductService'
 import Swal from 'sweetalert2'
-import { mask } from 'vue-the-mask'
+import { Money } from 'v-money'
 
 export default {
-  directives: {
-    mask
+  components: {
+    Money
   },
   data() {
     return {
@@ -92,9 +92,15 @@ export default {
         id: null,
         name: '',
         description: '',
-        price: null,
+        price: '',
         file: null,
         active: null
+      },
+      money: {
+        decimal: ',',
+        thousands: '.',
+        prefix: 'R$ ',
+        precision: 2
       }
     }
   },
@@ -106,6 +112,10 @@ export default {
       ProductService.getAll().then(response => (this.products = response.data))
     },
     save() {
+      if (this.form.price <= 0 || this.form.price > 999999.99) {
+        Swal.fire('', 'Preço com valor inválido', 'error')
+        return
+      }
       if (this.form.file && !this.form.file.type.startsWith('image')) {
         Swal.fire(
           '',
@@ -117,10 +127,7 @@ export default {
       let formData = new FormData()
       formData.append('id', this.form.id)
       formData.append('name', this.form.name)
-      formData.append(
-        'price',
-        this.form.price.replace(/\./g, '').replace(',', '.')
-      )
+      formData.append('price', this.form.price)
       if (this.form.file) {
         formData.append('file', this.form.file)
       }
@@ -140,7 +147,7 @@ export default {
       this.form.id = product.id
       this.form.name = product.name
       this.form.description = product.description
-      this.form.price = product.price.toString().replace('.', ',')
+      this.form.price = product.price
       this.form.active = product.active
     },
     remove(id) {
@@ -165,7 +172,7 @@ export default {
       this.form.id = null
       this.form.name = ''
       this.form.description = ''
-      this.form.price = null
+      this.form.price = ''
       this.form.file = null
       this.form.active = null
       // Trick to reset/clear native browser form validation state
